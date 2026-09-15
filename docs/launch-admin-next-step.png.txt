@@ -1,0 +1,23 @@
+Performance Dashboard
+
+admin@cplatform.test · Educator · SAT Prep Sandbox · LtiResourceLinkRequest
+
+All students, course 1
+
+HISTORY (Redshift nudges.*) nudges.student_course_status
+
+HISTORY (Redshift nudges.*) nudges.recommendations
+
+LIVE (Canvas API, fetched now) GET /api/v1/courses/1/enrollments?type[]=StudentEnrollment&include[]=total_scores&per_page=100
+
+USER_ID	NAME	RISK_LEVEL	RISK_SCORE	DAYS_INACTIVE	ASSIGNMENTS_MISSING	ASSIGNMENTS_SUBMITTED	CURRENT_SCORE	MODULE_REQUIREMENT_COMPLETED	MODULE_REQUIREMENT_COUNT	NEXT_STEP	LIVE_CURRENT_SCORE	LIVE_LAST_ACTIVITY_AT
+6	Elena Rossi	high	0.77	14	3	0	0.0	0	12	A4	–	2026-09-15T16:47:08Z
+11	Ibrahim Khan	medium	0.51	5	2	1	20.0	2	12	Grammar Rules Drill 1 (A2)	–	–
+5	Dev Sharma	medium	0.46	9	2	2	25.0	3	12	Grammar Rules Drill 1 (A3)	40.0	2026-09-12T17:57:12Z
+3	Ben Okafor	low	0.25	2	1	4	71.0	7	12	Linear Equations Set (A2)	70.0	2026-09-12T17:55:47Z
+12	Julia Costa	low	0.23	6	0	3	73.0	6	12	Word Problems Set (A1)	–	–
+4	Chloe Nguyen	low	0.07	1	0	3	40.0	5	12	Reading Checkpoint Quiz (A5)	55.0	2026-09-12T17:56:30Z
+8	Farah Haddad	low	0.06	0	0	6	60.0	10	12	Reading Practice Set (B3)	–	–
+10	Hana Sato	low	0.03	3	0	4	80.0	9	12	–	–	–
+9	Gabriel Silva	low	0.0	0	0	5	83.0	9	12	Word Problems Set (A1)	–	–
+2	Ava Patel	low	0.0	0	0	6	95.0	12	12	–	94.91	2026-09-12T17:54:34Z

@@ -1,0 +1,9 @@
+{
+  "name": "lti-dashboard",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "playwright": "1.49.1"
+  }
+}

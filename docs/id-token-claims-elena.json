@@ -1,0 +1,70 @@
+{
+  "https://purl.imsglobal.org/spec/lti/claim/message_type": "LtiResourceLinkRequest",
+  "https://purl.imsglobal.org/spec/lti/claim/version": "1.3.0",
+  "https://purl.imsglobal.org/spec/lti/claim/resource_link": {
+    "id": "4dde05e8ca1973bcca9bffc13e1548820eee93a3",
+    "description": null,
+    "title": "SAT Prep Sandbox"
+  },
+  "aud": "10000000000003",
+  "azp": "10000000000003",
+  "https://purl.imsglobal.org/spec/lti/claim/deployment_id": "6:8865aa05b4b79b64a91a86042e43af5ea8ae79eb",
+  "exp": 1789490203,
+  "iat": 1789486603,
+  "iss": "https://canvas.instructure.com",
+  "nonce": "tL2IsrIAjd_5Zst5CwlmoCciHNViyt8RA0Tr3rs3xTg",
+  "sub": "<redacted>",
+  "https://purl.imsglobal.org/spec/lti/claim/target_link_uri": "http://localhost:8800/lti/launch",
+  "picture": "<redacted>",
+  "email": "<redacted>",
+  "name": "Elena Rossi",
+  "given_name": "Elena",
+  "family_name": "Rossi",
+  "https://purl.imsglobal.org/spec/lti/claim/lis": {
+    "person_sourcedid": "<redacted>",
+    "course_offering_sourcedid": "<redacted>"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/context": {
+    "id": "4dde05e8ca1973bcca9bffc13e1548820eee93a3",
+    "label": "SAT-101",
+    "title": "SAT Prep Sandbox",
+    "type": [
+      "http://purl.imsglobal.org/vocab/lis/v2/course#CourseOffering"
+    ]
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/tool_platform": {
+    "guid": "2NZFFHLSxoUkbd38FZ0T7e8y3jvqFMuYHmUU31T7:canvas-lms",
+    "name": "cplatform",
+    "version": "cloud",
+    "product_family_code": "canvas"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/launch_presentation": {
+    "document_target": "iframe",
+    "return_url": "http://localhost:3100/courses/1/external_content/success/external_tool_redirect",
+    "locale": "en",
+    "height": 400,
+    "width": 800
+  },
+  "locale": "en",
+  "https://purl.imsglobal.org/spec/lti/claim/roles": [
+    "http://purl.imsglobal.org/vocab/lis/v2/institution/person#Student",
+    "http://purl.imsglobal.org/vocab/lis/v2/membership#Learner",
+    "http://purl.imsglobal.org/vocab/lis/v2/system/person#User"
+  ],
+  "https://purl.imsglobal.org/spec/lti/claim/custom": {
+    "canvas_user_id": "6",
+    "canvas_course_id": "1"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/lti11_legacy_user_id": "3855b23dac0e1d4aaa0d23ea532bce3abfd7cec2",
+  "https://purl.imsglobal.org/spec/lti/claim/lti1p1": {
+    "user_id": "3855b23dac0e1d4aaa0d23ea532bce3abfd7cec2"
+  },
+  "https://purl.imsglobal.org/spec/lti/claim/eulaservice": {
+    "url": "http://localhost:3100/api/lti/asset_processor_eulas/6",
+    "scope": [
+      "https://purl.imsglobal.org/spec/lti/scope/eula/user",
+      "https://purl.imsglobal.org/spec/lti/scope/eula/deployment"
+    ]
+  },
+  "https://www.instructure.com/placement": "course_navigation"
+}
