@@ -1,0 +1,88 @@
+name: canvas-tao
+services:
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    labels: {project: canvas}
+    environment:
+      DISABLE_SECURITY_PLUGIN: "true"
+      ES_JAVA_OPTS: -Xms128m -Xmx1024m
+      bootstrap.memory_lock: "true"
+      discovery.type: single-node
+      node.name: es
+      xpack.security.enabled: "false"
+      xpack.security.http.ssl.enabled: "false"
+      xpack.security.transport.ssl.enabled: "false"
+      xpack.watcher.enabled: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://es:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1"]
+      timeout: 30s
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      start_interval: 30s
+    ulimits:
+      memlock: {soft: -1, hard: -1}
+      nofile: {soft: 65536, hard: 65536}
+    volumes: [es:/usr/share/elasticsearch/data]
+  firestore:
+    image: quay.io/tao-ce/services/firestore-emulator:latest
+    labels: {project: canvas}
+    environment: {PROJECT_ID: demo-tao}
+  pgsql:
+    image: docker.io/postgres:17-alpine
+    labels: {project: canvas}
+    environment: {POSTGRES_PASSWORD: postgres, POSTGRES_USER: postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -t 2 -U $$POSTGRES_USER"]
+      timeout: 30s
+      interval: 10s
+      retries: 5
+      start_period: 3s
+    volumes: [pgsql:/var/lib/postgresql/data]
+  pubsub:
+    image: quay.io/tao-ce/services/pubsub-emulator:latest
+    labels: {project: canvas}
+  redis:
+    image: docker.io/valkey/valkey:8-alpine
+    labels: {project: canvas}
+    command: [valkey-server, --save, "60", "1", --loglevel, warning]
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping"]
+      timeout: 30s
+      interval: 10s
+      retries: 5
+      start_period: 3s
+    volumes: [redis:/data]
+  tao:
+    image: tao.docker.scarf.sh/tao-ce/tao-ce:latest
+    container_name: canvas-tao
+    labels: {project: canvas}
+    cgroup: host
+    privileged: true
+    configs:
+      - {source: tao_config, target: /etc/tao-ce/config/tao.yaml, mode: "0644"}
+    depends_on:
+      es: {condition: service_healthy}
+      firestore: {condition: service_started}
+      pgsql: {condition: service_started}
+      pubsub: {condition: service_started}
+      redis: {condition: service_started}
+    extra_hosts: ["community.tao.internal=0.0.0.0"]
+    ports: ["3200:443"]
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup
+      - containers:/home/vscode/.local/share/containers
+      - tao-ce-lib:/var/lib/tao-ce
+configs:
+  tao_config:
+    content: |
+      spec:
+        publicDomain: community.tao.internal
+        defaultLocale: en-US
+        dependencies:
+        - {key: pubsub, type: pubsub, address: {schema: http, port: 8432, host: pubsub}}
+        - {key: firestore, type: firestore, address: {schema: http, port: 8080, host: firestore}}
+        - {key: es, type: es, address: {schema: http, port: 9200, host: es}}
+        - {key: pgsql, type: pgsql, address: {schema: pgsql, port: 5432, host: pgsql}}
+        - {key: redis, type: redis, address: {schema: redis, host: redis}}
+volumes: {es: {}, pgsql: {}, redis: {}, containers: {}, tao-ce-lib: {}}
