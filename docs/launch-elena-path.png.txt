@@ -1,0 +1,84 @@
+Performance Dashboard
+
+Elena Rossi · Student · SAT Prep Sandbox · LtiResourceLinkRequest
+
+Your path
+
+HISTORY (Redshift nudges.*) nudges.learning_paths
+
+Reading Diagnostic missing (A2)
+Grammar Rules Drill 1 missing (A2)
+Linear Equations Set missing (A2)
+Word Problems Set due tomorrow (A1)
+Practice Test 1 Reflection due in 2 days (A1)
+Algebra Refresher practice: Heart of Algebra (B3)
+Linear Equations Practice practice: Heart of Algebra (B3)
+Reading Practice Set practice: Reading (B3)
+Course status
+
+HISTORY (Redshift nudges.*) nudges.student_course_status
+
+name	Elena Rossi
+enrollment_state	–
+risk_level	high
+risk_score	0.77
+days_inactive	14
+last_activity_at	–
+last_submission_at	–
+current_score	0.0
+assignments_total	–
+assignments_submitted	0
+assignments_missing	3
+assignments_late	0
+assignments_due_3d_unsubmitted	2
+quizzes_complete	0
+quizzes_total	–
+quiz_avg_percent	–
+module_requirement_completed	0
+module_requirement_count	12
+logins_7d	0
+computed_at	2026-09-15 09:04:23
+Assignments
+
+HISTORY (Redshift nudges.*) nudges.assignment_status
+
+TITLE	DUE_AT	STATUS	SUBMITTED_AT	SCORE	POINTS_POSSIBLE
+Reading Diagnostic	2026-09-05 23:59:00	missing	–	0.0	20.0
+Grammar Rules Drill 1	2026-09-11 23:59:00	missing	–	0.0	15.0
+Linear Equations Set	2026-09-13 23:59:00	missing	–	0.0	20.0
+Word Problems Set	2026-09-16 23:59:00	due_soon	–	–	20.0
+Practice Test 1 Reflection	2026-09-17 23:59:00	due_soon	–	–	10.0
+Recommendations
+
+HISTORY (Redshift nudges.*) nudges.recommendations
+
+status: proposed
+ID	RULE	SURFACE	TEXT	NEXT_TITLE	DECIDED_BY	PUSHED_AT
+56	A2	block	Three items are past due, starting with Reading Diagnostic. Any one of them moves your score off zero.	Reading Diagnostic	–	–
+57	A4	advisor	Advisor draft for Elena Rossi: no activity since 1 September, 3 missing, module requirements 0 of 12, risk high. Review before any outreach.	–	–	–
+status: pushed
+ID	RULE	SURFACE	TEXT	NEXT_TITLE	DECIDED_BY	PUSHED_AT
+55	A1	block	Word Problems Set is due tomorrow, 20 points. Practice Test 1 Reflection follows on Thursday.	Word Problems Set	cli	2026-09-15 18:41:50
+61	R1	module	Assign 'Remediation: Heart of Algebra' to Elena Rossi	–	cli	2026-09-15 18:37:54
+Enrollment
+
+LIVE (Canvas API, fetched now) GET /api/v1/courses/1/enrollments?user_id=6&type[]=StudentEnrollment&include[]=total_scores
+
+last_activity_at	2026-09-15T18:43:17Z
+total_activity_time	2796
+current_score	–
+final_score	0.0
+Submissions
+
+LIVE (Canvas API, fetched now) GET /api/v1/courses/1/students/submissions?student_ids[]=6&include[]=assignment&per_page=50
+
+ASSIGNMENT	WORKFLOW_STATE	SCORE	LATE	MISSING	SUBMITTED_AT
+Reading Diagnostic	unsubmitted	–	false	true	–
+Grammar Rules Drill 1	unsubmitted	–	false	true	–
+Linear Equations Set	unsubmitted	–	false	true	–
+Word Problems Set	unsubmitted	–	false	true	–
+Practice Test 1 Reflection	unsubmitted	–	false	false	–
+Practice Test 2 Reflection	unsubmitted	–	false	false	–
+Algebra Checkpoint Quiz	unsubmitted	–	false	true	–
+Reading Checkpoint Quiz	unsubmitted	–	false	false	–
+Linear Equations Practice	unsubmitted	–	false	false	–

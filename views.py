@@ -6,7 +6,7 @@ from data import Failed, Layout, Loaded, Part, Row, Section, Source
 from lti import Launch
 
 RISK_LEVELS = ("high", "medium", "low")
-HIDDEN_COLUMNS = frozenset({"next_url"})
+HIDDEN_COLUMNS = frozenset({"next_url", "path_url"})
 
 STYLE_HTML = """<style>
 body { margin: 0; padding: 18px; font: 14px/1.45 system-ui, sans-serif; color: #17212b; background: #fff; }
@@ -33,6 +33,10 @@ td.risk { font-weight: 700; }
 td.risk.high { color: #b91c1c; }
 td.risk.medium { color: #b45309; }
 td.risk.low { color: #12794f; }
+ol.path { margin: 6px 0 0; padding-left: 22px; }
+ol.path li { margin: 3px 0; }
+ol.path span.reason { color: #4a5a6a; margin-left: 4px; }
+ol.path span.rule { color: #4a5a6a; font-size: 11px; }
 </style>"""
 
 
@@ -116,6 +120,8 @@ def _columns(parts: Sequence[Part]) -> tuple[str, ...]:
 def _body(section: Section, columns: Sequence[str]) -> str:
     if not any(isinstance(part, Loaded) for part in section.parts):
         return ""
+    if section.layout is Layout.LIST:
+        return _list(section.rows)
     if not section.rows:
         return '<p class="empty">No rows.</p>'
     if section.layout is Layout.KEY_VALUE:
@@ -178,9 +184,21 @@ def _next_step(row: Row) -> str:
     return _link(text, row.get("next_url"))
 
 
+def _path(row: Row) -> str:
+    title = row.get("path_title")
+    if title is None or not str(title).strip():
+        return "&ndash;"
+    steps = row.get("path_steps")
+    if steps is None or not str(steps).strip():
+        return _link(title, row.get("path_url"))
+    count = "1 step" if steps == 1 else f"{steps} steps"
+    return _link(f"{title} ({count})", row.get("path_url"))
+
+
 CELL_RENDERERS: dict[str, Callable[[Row], str]] = {
     "next_title": _next_title,
     "next_step": _next_step,
+    "path": _path,
 }
 
 
@@ -205,3 +223,21 @@ def _grouped(columns: Sequence[str], rows: Sequence[Row], group_by: str) -> str:
         table_html = _table(rest, members)
         chunks.append(f'<h3 class="group">{cell(group_by)}: {cell(value)}</h3>{table_html}')
     return "".join(chunks)
+
+
+def _list(rows: Sequence[Row]) -> str:
+    if not rows:
+        return '<p class="empty">Nothing outstanding.</p>'
+    items_html = "".join(f"<li>{_step(row)}</li>" for row in rows)
+    return f'<ol class="path">{items_html}</ol>'
+
+
+def _step(row: Row) -> str:
+    parts = [_link(row.get("title"), row.get("url"))]
+    reason = row.get("reason")
+    if reason is not None and str(reason).strip():
+        parts.append(f' <span class="reason">{cell(reason)}</span>')
+    source_rule = row.get("source_rule")
+    if source_rule is not None and str(source_rule).strip():
+        parts.append(f' <span class="rule">({cell(source_rule)})</span>')
+    return "".join(parts)

@@ -160,20 +160,23 @@ system/person#User, so the admin saw all students.
 Every section on the page carries a badge naming its origin, and under the badge the exact table
 or request it came from.
 
-The student view has five sections, fetched in parallel threads. Course status, Assignments and
-Recommendations are HISTORY. They come from Redshift tables nudges.student_course_status,
-nudges.assignment_status and nudges.recommendations, filtered by course_id and user_id from the
-custom claim. The redshift project seeded the first two and the nudge-agent project writes the
-third. Each Recommendations row links to the Canvas module item the nudge agent's next-step
-resolver picks for it, and the link href is nudges.recommendations.next_url, which the resolver
-fills from nudges.content_items. Enrollment and Submissions are LIVE. They are Canvas REST reads
-made at render time with the API token, `GET /api/v1/courses/1/enrollments?user_id=6&type[]=StudentEnrollment&include[]=total_scores`
+The student view has six sections, fetched in parallel threads. Your path, Course status,
+Assignments and Recommendations are HISTORY. They come from Redshift tables
+nudges.learning_paths, nudges.student_course_status, nudges.assignment_status and
+nudges.recommendations, filtered by course_id and user_id from the custom claim. The redshift
+project seeded the middle two and the nudge-agent project writes the other two. Your path is
+written by the nudge agent's `path` command, which reruns on every scan. Each
+Recommendations row links to the Canvas module item the nudge agent's next-step resolver picks
+for it, and the link href is nudges.recommendations.next_url, which the resolver fills from
+nudges.content_items. Enrollment and Submissions are LIVE. They are Canvas REST reads made at
+render time with the API token, `GET /api/v1/courses/1/enrollments?user_id=6&type[]=StudentEnrollment&include[]=total_scores`
 and `GET /api/v1/courses/1/students/submissions?student_ids[]=6&include[]=assignment&per_page=50`.
 
 The teacher view is one table. The HISTORY rows are nudges.student_course_status for the whole
 course ordered by risk_score, and a LIVE read of `GET /api/v1/courses/1/enrollments?type[]=StudentEnrollment&include[]=total_scores&per_page=100`
-is joined on user_id to add live_current_score and live_last_activity_at. A dash in a LIVE
-column means Canvas returned no value for that student.
+is joined on user_id to add live_current_score and live_last_activity_at. The Path column is
+that student's first nudges.learning_paths step and her step count, joined on user_id the same
+way. A dash in a LIVE column means Canvas returned no value for that student.
 
 A section whose fetch fails renders an error box where its rows would be. The other sections
 still render. docs/launch-elena.png.txt and docs/launch-admin.png.txt hold the page text from

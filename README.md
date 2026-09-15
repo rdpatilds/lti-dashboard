@@ -13,7 +13,7 @@ changes for production. Read it first if LTI is new to you.
 ## Prerequisites
 
 - The cplatform Canvas Docker instance up on http://localhost:3100, with the SAT-101 course and its users seeded. `docker ps --filter name=cplatform` shows cplatform-web-1 running.
-- The Redshift Serverless workgroup `canvas` provisioned and seeded by D:\Canvas\redshift, so `nudges.student_course_status`, `nudges.assignment_status` and `nudges.recommendations` have rows. The nudge-agent project fills the third table.
+- The Redshift Serverless workgroup `canvas` provisioned and seeded by D:\Canvas\redshift, so `nudges.student_course_status`, `nudges.assignment_status`, `nudges.recommendations` and `nudges.learning_paths` have rows. The nudge-agent project fills the third and fourth tables.
 - AWS credentials in your shell that can call the Redshift Data API. There is no database password.
 - `uv` for the Python side.
 - `node` and Google Chrome for the verification script. Playwright drives the installed Chrome, it does not download one.
@@ -51,10 +51,10 @@ Run these in order from D:\Canvas\lti-dashboard.
 
    Expect a developer key named "Kaplan Performance Dashboard" with client id 10000000000003, lock_deploying False, and an account tool with id 6.
 
-4. Launch it. Open http://localhost:3100/courses/1 as `elena.rossi@sat.test` with `Password123!` and click Performance Dashboard in the course nav. Expect Elena's five sections. Then log in as `admin@cplatform.test` with `cplatform-admin`. The course nav is collapsed for teachers, so open the hamburger or go straight to http://localhost:3100/courses/1/external_tools/6. Expect one table of all ten students. Recommendation rows in both views link to the Canvas module item the nudge agent's next-step resolver picks for them. The href is `nudges.recommendations.next_url`, which the resolver fills from `nudges.content_items`.
+4. Launch it. Open http://localhost:3100/courses/1 as `elena.rossi@sat.test` with `Password123!` and click Performance Dashboard in the course nav. Expect Elena's six sections. Then log in as `admin@cplatform.test` with `cplatform-admin`. The course nav is collapsed for teachers, so open the hamburger or go straight to http://localhost:3100/courses/1/external_tools/6. Expect one table of all ten students. Recommendation rows in both views link to the Canvas module item the nudge agent's next-step resolver picks for them. The href is `nudges.recommendations.next_url`, which the resolver fills from `nudges.content_items`. Her personalised path comes from `nudges.learning_paths`, written by the nudge agent's `path` command, which reruns on every scan.
 
 The first launch after Redshift has been idle is slow. A paused Serverless workgroup takes tens
-of seconds to resume, and the statement poll gives up after 60. If the three HISTORY sections
+of seconds to resume, and the statement poll gives up after 60. If the four HISTORY sections
 show error boxes, reload.
 
 ## Verify it

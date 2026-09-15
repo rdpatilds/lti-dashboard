@@ -9,7 +9,7 @@ const CONTENT_TIMEOUT_MS = 60000;
 const POLL_INTERVAL_MS = 500;
 const COURSE_NAV_LABEL = "Performance Dashboard";
 const CONTENT_TERMS = ["HISTORY", "LIVE"];
-const ROLE_TERMS = { student: ["Elena Rossi", "recommendations"], teacher: ["All students"] };
+const ROLE_TERMS = { student: ["Elena Rossi", "recommendations", "Your path"], teacher: ["All students", "PATH"] };
 
 const checks = [];
 function record(name, ok, detail) { checks.push({ name, ok, detail }); return ok; }
@@ -265,6 +265,7 @@ async function main() {
 
   const browser = await chromium.launch({ channel: "chrome" });
   const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+page.setDefaultTimeout(120000);
 
   const errors = [];
   attachLogging(page, errors);

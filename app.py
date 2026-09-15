@@ -96,16 +96,19 @@ def _redact(key: str, value):
 def sections_for(verified: lti.Launch) -> list[data.Section]:
     course_id = verified.course_id
     if verified.is_educator:
-        history, steps, live = _gather(
+        history, steps, paths, live = _gather(
             partial(data.cohort_rows, course_id),
             partial(data.next_steps, course_id),
+            partial(data.first_path_steps, course_id),
             partial(data.live_cohort, course_id),
         )
-        return [history.join(steps, on="user_id").join(live, on="user_id")]
+        joined = history.join(steps, on="user_id").join(paths, on="user_id")
+        return [joined.join(live, on="user_id")]
     user_id = verified.canvas_user_id
     if user_id is None:
         return []
     return _gather(
+        partial(data.path_rows, course_id, user_id),
         partial(data.student_row, course_id, user_id),
         partial(data.assignment_rows, course_id, user_id),
         partial(data.recommendation_rows, course_id, user_id),

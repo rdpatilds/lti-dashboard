@@ -39,6 +39,7 @@ class Layout(StrEnum):
     TABLE = "table"
     KEY_VALUE = "key_value"
     GROUPED = "grouped"
+    LIST = "list"
 
 
 @dataclass(frozen=True, slots=True)
@@ -207,6 +208,9 @@ COHORT_COLUMNS = (
 NEXT_STEP_FIELDS = ("user_id", "rule", "next_title", "next_url")
 NEXT_STEP_COLUMNS = ("next_step",)
 
+PATH_COLUMNS = ("position", "title", "url", "reason", "source_rule")
+FIRST_PATH_COLUMNS = ("path",)
+
 
 def _student(course_id: int, user_id: int) -> list[dict]:
     return [
@@ -253,6 +257,20 @@ def recommendation_rows(course_id: int, user_id: int) -> Section:
     )
 
 
+def path_rows(course_id: int, user_id: int) -> Section:
+    sql = (
+        f"select {', '.join(PATH_COLUMNS)} from nudges.learning_paths"
+        " where course_id = :course_id and user_id = :user_id order by position"
+    )
+    part = Loaded(Source.HISTORY, "nudges.learning_paths", PATH_COLUMNS)
+    return _section(
+        "Your path",
+        part,
+        lambda: run(sql, _student(course_id, user_id)),
+        layout=Layout.LIST,
+    )
+
+
 def cohort_rows(course_id: int) -> Section:
     sql = (
         f"select {', '.join(COHORT_COLUMNS)} from nudges.student_course_status"
@@ -277,6 +295,24 @@ def next_steps(course_id: int) -> Section:
         ") ranked where rn = 1"
     )
     part = Loaded(Source.HISTORY, "nudges.recommendations", NEXT_STEP_COLUMNS)
+    return _section(
+        f"All students, course {course_id}",
+        part,
+        lambda: run(sql, [{"name": "course_id", "value": str(course_id)}]),
+    )
+
+
+def first_path_steps(course_id: int) -> Section:
+    sql = (
+        "select user_id, title as path_title, url as path_url, steps as path_steps from (\n"
+        "  select user_id, title, url,\n"
+        "         row_number() over (partition by user_id order by position) as rn,\n"
+        "         count(*) over (partition by user_id) as steps\n"
+        "  from nudges.learning_paths\n"
+        "  where course_id = :course_id\n"
+        ") ranked where rn = 1"
+    )
+    part = Loaded(Source.HISTORY, "nudges.learning_paths", FIRST_PATH_COLUMNS)
     return _section(
         f"All students, course {course_id}",
         part,
